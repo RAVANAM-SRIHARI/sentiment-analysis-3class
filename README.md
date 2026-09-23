@@ -1,92 +1,119 @@
-# NLP Sentiment Analysis
+# 💬 Product Review Sentiment Analysis
 
-## Project Overview
+A Machine Learning project that classifies product reviews into three sentiment categories:
 
-This project develops a machine-learning sentiment analysis system
-for customer product reviews.
+* 🔴 **Negative**
+* 🟡 **Neutral**
+* 🟢 **Positive**
 
-Reviews are classified into three sentiment categories:
+The project covers the complete machine learning workflow, from data exploration and text preprocessing to model training, evaluation, model serialization, and deployment using **Streamlit**.
 
-- Negative
-- Neutral
-- Positive
+---
 
-## Sentiment Mapping
+## 🚀 Live Demo
+
+Try the deployed application:
+
+**[Product Review Sentiment Analysis — Streamlit App](https://sentiment-analysis-3class-k79mw38u36u6pzpndb4tdz.streamlit.app/)**
+
+Enter a product review and the application predicts whether the review is Negative, Neutral, or Positive.
+
+---
+
+## 📌 Project Overview
+
+Customer reviews contain valuable information about how users perceive a product. Sentiment analysis can be used to automatically identify the overall sentiment expressed in these reviews.
+
+In this project, product ratings are converted into three sentiment classes:
 
 | Rating | Sentiment |
-|--------|-----------|
-| 1-2 | Negative |
-| 3 | Neutral |
-| 4-5 | Positive |
+| ------ | --------- |
+| 1–2    | Negative  |
+| 3      | Neutral   |
+| 4–5    | Positive  |
 
-## Workflow
+The project uses **TF-IDF** to convert textual reviews into numerical features and compares multiple traditional machine learning approaches for multiclass classification.
 
-The project follows this workflow:
+---
 
-1. Data loading
-2. Data inspection
-3. Rating distribution analysis
-4. Sentiment creation
-5. Text length analysis
-6. Word count analysis
-7. Noise investigation
-8. Multilingual text investigation
-9. Text preprocessing
-10. Word-frequency analysis
-11. Train/test split
-12. TF-IDF feature extraction
-13. Logistic Regression
-14. Linear SVM
-15. Multinomial Naive Bayes
-16. Cross-validation
-17. Model comparison
-18. Error analysis
-19. Final model selection
-20. Streamlit deployment
+## 🎯 Objectives
 
-## Preprocessing
+The main objectives of this project are to:
 
-The project uses light preprocessing.
+* Explore and understand product review data.
+* Analyze rating and sentiment distributions.
+* Perform text preprocessing and cleaning.
+* Convert text into numerical features using TF-IDF.
+* Train and compare multiple machine learning models.
+* Evaluate model performance using accuracy, precision, recall, F1-score, and confusion matrices.
+* Analyze errors, particularly for the Neutral class.
+* Build a reusable machine learning pipeline.
+* Save the trained model using Joblib.
+* Deploy the sentiment analysis application using Streamlit.
 
-HTML tags and URLs are handled, whitespace is normalized,
-and text is converted to lowercase.
+---
 
-Aggressive removal of stopwords, Unicode characters,
-and sentiment-related information is avoided.
+## 📊 Dataset
 
-## Models
+The dataset contains product reviews along with their corresponding ratings.
 
-The following machine-learning algorithms are compared:
+The original ratings are mapped into three sentiment classes:
 
-- Logistic Regression
-- Linear SVM
-- Multinomial Naive Bayes
+```text
+1–2 → Negative
+3   → Neutral
+4–5 → Positive
+```
 
-Models are selected using stratified cross-validation
-with macro F1 as the primary model-selection metric.
+### Class Distribution
 
-## Evaluation
+| Sentiment | Number of Reviews |
+| --------- | ----------------: |
+| Negative  |               512 |
+| Neutral   |               199 |
+| Positive  |               729 |
+| **Total** |         **1,440** |
 
-The final model is evaluated using:
+The dataset is not perfectly balanced, with Positive reviews representing the largest class and Neutral reviews representing the smallest class.
 
-- Accuracy
-- Precision
-- Recall
-- F1-score
-- Macro F1
-- Confusion Matrix
+---
 
-## Deployment
+## 🔎 Exploratory Data Analysis
 
-The final trained pipeline is saved as:
+The exploratory analysis includes:
 
-`sentiment_pipeline.joblib`
+* Dataset structure and information
+* Missing-value inspection
+* Rating distribution
+* Sentiment distribution
+* Review length analysis
+* Word-frequency analysis
+* Bigram analysis
+* Data-quality checks
+* Basic language detection for exploratory purposes
 
-The application is built using Streamlit.
+Some common words and phrases were examined separately across sentiment classes to understand patterns in the reviews.
 
-## Run Locally
+The analysis also showed that Neutral reviews are often more ambiguous than clearly positive or negative reviews. Many Neutral reviews contain a mixture of positive and negative opinions.
 
-Install dependencies:
+---
 
-```bash
-pip install -r requirements.txt
+## 🧹 Text Preprocessing
+
+The project uses relatively light text preprocessing to avoid removing useful sentiment information.
+
+The preprocessing includes:
+
+* Converting text to string
+* Removing HTML tags
+* Replacing URLs with a special `URL` token
+* Normalizing whitespace
+* Converting text to lowercase
+* Removing leading and trailing spaces
+
+### Important preprocessing decisions
+
+The project intentionally does **not**:
+
+* Remove the word `not`
+* Convert text to A
