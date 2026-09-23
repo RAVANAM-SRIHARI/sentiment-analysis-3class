@@ -1,30 +1,22 @@
 # 💬 Product Review Sentiment Analysis
 
-A Machine Learning project that classifies product reviews into three sentiment categories:
+## End-to-End Machine Learning and Streamlit Deployment Project
 
-* 🔴 **Negative**
-* 🟡 **Neutral**
-* 🟢 **Positive**
+An end-to-end Natural Language Processing (NLP) project that analyzes product reviews and classifies them into **Negative, Neutral, or Positive** sentiment.
 
-The project covers the complete machine learning workflow, from data exploration and text preprocessing to model training, evaluation, model serialization, and deployment using **Streamlit**.
+The project covers the complete machine learning workflow:
 
----
-
-## 🚀 Live Demo
-
-Try the deployed application:
-
-**[Product Review Sentiment Analysis — Streamlit App](https://sentiment-analysis-3class-k79mw38u36u6pzpndb4tdz.streamlit.app/)**
-
-Enter a product review and the application predicts whether the review is Negative, Neutral, or Positive.
+**Data Preparation → Exploratory Data Analysis → Text Preprocessing → Feature Engineering → Model Training → Model Evaluation → Error Analysis → Pipeline Creation → Model Serialization → Streamlit Deployment**
 
 ---
 
-## 📌 Project Overview
+# 📌 1. Project Overview
 
-Customer reviews contain valuable information about how users perceive a product. Sentiment analysis can be used to automatically identify the overall sentiment expressed in these reviews.
+Online product reviews contain valuable information about customer experiences and opinions. Automatically identifying the sentiment of these reviews can help organizations understand customer feedback at scale.
 
-In this project, product ratings are converted into three sentiment classes:
+This project develops a **three-class sentiment classification system** for product reviews.
+
+The original product ratings are converted into three sentiment categories:
 
 | Rating | Sentiment |
 | ------ | --------- |
@@ -32,108 +24,166 @@ In this project, product ratings are converted into three sentiment classes:
 | 3      | Neutral   |
 | 4–5    | Positive  |
 
-The project uses **TF-IDF** to convert textual reviews into numerical features and compares multiple traditional machine learning approaches for multiclass classification.
+The project focuses on traditional machine learning techniques using **TF-IDF text representation**, **Logistic Regression**, and **LinearSVC**, followed by deployment through **Streamlit**.
 
 ---
 
-## 🎯 Objectives
+# 🎯 2. Project Objectives
 
-The main objectives of this project are to:
+The main objectives of this project are:
 
-* Explore and understand product review data.
-* Analyze rating and sentiment distributions.
-* Perform text preprocessing and cleaning.
-* Convert text into numerical features using TF-IDF.
-* Train and compare multiple machine learning models.
-* Evaluate model performance using accuracy, precision, recall, F1-score, and confusion matrices.
-* Analyze errors, particularly for the Neutral class.
-* Build a reusable machine learning pipeline.
-* Save the trained model using Joblib.
-* Deploy the sentiment analysis application using Streamlit.
+1. Understand and explore the product review dataset.
+2. Convert product ratings into three sentiment categories.
+3. Perform exploratory data analysis on reviews and sentiment distribution.
+4. Clean and preprocess review text.
+5. Preserve important sentiment information such as negation.
+6. Convert text into numerical features using TF-IDF.
+7. Train multiple machine learning classifiers.
+8. Compare model performance using appropriate evaluation metrics.
+9. Investigate the difficulty of classifying Neutral reviews.
+10. Perform error analysis on incorrectly classified reviews.
+11. Build a reusable machine learning Pipeline.
+12. Serialize the trained model using Joblib.
+13. Develop an interactive Streamlit application.
+14. Deploy the sentiment analysis application for real-world use.
 
 ---
 
-## 📊 Dataset
+# 📊 3. Dataset
 
-The dataset contains product reviews along with their corresponding ratings.
+The dataset contains product reviews and their corresponding product ratings.
 
-The original ratings are mapped into three sentiment classes:
+The original rating values are mapped into three sentiment classes:
 
 ```text
-1–2 → Negative
-3   → Neutral
-4–5 → Positive
+Rating 1–2 → Negative
+Rating 3   → Neutral
+Rating 4–5 → Positive
 ```
 
-### Class Distribution
+## Dataset Distribution
 
-| Sentiment | Number of Reviews |
-| --------- | ----------------: |
-| Negative  |               512 |
-| Neutral   |               199 |
-| Positive  |               729 |
-| **Total** |         **1,440** |
+The complete dataset contains **1,440 reviews**.
 
-The dataset is not perfectly balanced, with Positive reviews representing the largest class and Neutral reviews representing the smallest class.
+| Sentiment |   Reviews |
+| --------- | --------: |
+| Negative  |       512 |
+| Neutral   |       199 |
+| Positive  |       729 |
+| **Total** | **1,440** |
+
+The dataset is therefore not perfectly balanced.
+
+The **Positive** class contains the largest number of reviews, while **Neutral** is the smallest class.
+
+This imbalance was considered during model development and evaluation.
 
 ---
 
-## 🔎 Exploratory Data Analysis
+# 🔎 4. Exploratory Data Analysis
 
-The exploratory analysis includes:
+Exploratory Data Analysis was performed before model training to understand the structure and characteristics of the review data.
 
-* Dataset structure and information
+The analysis included:
+
+* Dataset shape and structure
+* Data types
 * Missing-value inspection
 * Rating distribution
 * Sentiment distribution
-* Review length analysis
+* Review-length analysis
 * Word-frequency analysis
 * Bigram analysis
 * Data-quality checks
 * Basic language detection for exploratory purposes
 
-Some common words and phrases were examined separately across sentiment classes to understand patterns in the reviews.
+## Review Length
 
-The analysis also showed that Neutral reviews are often more ambiguous than clearly positive or negative reviews. Many Neutral reviews contain a mixture of positive and negative opinions.
+The reviews vary considerably in length, ranging from short comments to detailed product experiences.
 
----
-
-## 🧹 Text Preprocessing
-
-The project uses relatively light text preprocessing to avoid removing useful sentiment information.
-
-The preprocessing includes:
-
-* Converting text to string
-* Removing HTML tags
-* Replacing URLs with a special `URL` token
-* Normalizing whitespace
-* Converting text to lowercase
-* Removing leading and trailing spaces
-
-### Important preprocessing decisions
-
-The project intentionally does **not**:
-
-* Remove the word `not`
-* Convert text to ASCII
-* Remove non-English Unicode characters
-* Aggressively remove stopwords
-* Perform aggressive stemming
-* Perform aggressive lemmatization
-* Remove emojis
-
-This helps preserve information that can be useful for sentiment classification.
+This variation is important because some reviews contain only a few sentiment-bearing words while others contain multiple opinions and product characteristics.
 
 ---
 
-## 🔤 Feature Extraction
+# 🧹 5. Text Preprocessing
 
-### TF-IDF
+The goal of preprocessing was to remove unnecessary noise while preserving information that could be useful for sentiment classification.
 
-**Term Frequency–Inverse Document Frequency (TF-IDF)** is used to convert text into numerical feature vectors.
+The main preprocessing steps were:
 
-The main configuration includes:
+### 5.1 Convert text to string
+
+Review values are converted to strings to ensure consistent processing.
+
+### 5.2 Remove HTML tags
+
+HTML tags are removed from review text.
+
+Example:
+
+```text
+"This phone is <b>good</b>"
+```
+
+becomes approximately:
+
+```text
+"This phone is good"
+```
+
+### 5.3 Replace URLs
+
+URLs are replaced with a special token:
+
+```text
+URL
+```
+
+rather than being removed completely.
+
+### 5.4 Normalize whitespace
+
+Multiple spaces and unnecessary whitespace are normalized.
+
+### 5.5 Convert text to lowercase
+
+Text is converted to lowercase so that words such as:
+
+```text
+Good
+GOOD
+good
+```
+
+are treated consistently.
+
+---
+
+# 🌍 6. Multilingual Text Investigation
+
+Language detection was performed as part of exploratory analysis.
+
+The dataset contains predominantly English reviews, along with a small number of reviews or fragments detected as other languages.
+
+The project did **not** remove non-English reviews simply based on language detection.
+
+This decision was made because automatic language detection can produce incorrect classifications, particularly for short reviews and code-mixed text.
+
+Therefore, the modeling workflow preserves Unicode text rather than applying ASCII-only conversion.
+
+---
+
+# ⚙️ 7. Feature Extraction Using TF-IDF
+
+Machine learning algorithms cannot directly process raw text.
+
+Therefore, the reviews are converted into numerical representations using:
+
+## TF-IDF
+
+**TF-IDF (Term Frequency–Inverse Document Frequency)** assigns numerical importance to words based on their occurrence within individual reviews and across the collection of reviews.
+
+The main TF-IDF configuration used in the project was:
 
 ```python
 TfidfVectorizer(
@@ -144,48 +194,51 @@ TfidfVectorizer(
 )
 ```
 
-Both unigrams and bigrams are considered.
+### N-grams
+
+Both unigrams and bigrams are used.
 
 For example:
 
 ```text
-good
-phone
-good phone
 battery
 battery life
+camera
+camera quality
+good
+good phone
 ```
 
-This allows the model to use both individual words and short phrases.
+This allows the model to capture short phrases rather than relying only on individual words.
 
 ---
 
-## 🤖 Machine Learning Models
+# 🤖 8. Machine Learning Models
 
-Several models and feature configurations were evaluated during experimentation.
+Several traditional machine learning approaches were evaluated.
 
-### Models tested
+The primary models were:
 
 * Logistic Regression
-* Linear Support Vector Machine (`LinearSVC`)
+* Linear Support Vector Classification (`LinearSVC`)
 
-### Additional experiments
+Additional feature and preprocessing experiments were also performed.
 
-The project also evaluated:
+These included:
 
-* TF-IDF with different n-gram ranges
+* Word-level TF-IDF
+* Character-level TF-IDF
 * Word + character TF-IDF
+* Different n-gram ranges
 * Class weighting
 * Additional sentiment-count features
 * Contraction expansion
-* Model probability analysis
-* Neutral-class error analysis
 
-These experiments were used to understand which approaches improved performance and which did not.
+The purpose of these experiments was to determine whether changes in representation or model configuration could improve three-class sentiment classification.
 
 ---
 
-## 📈 Model Evaluation
+# 🧪 9. Train-Test Split
 
 The dataset was divided into training and testing sets.
 
@@ -194,7 +247,7 @@ Training samples: 1,152
 Testing samples:    288
 ```
 
-The test set contains:
+The test-set distribution was:
 
 | Sentiment | Test Samples |
 | --------- | -----------: |
@@ -202,179 +255,435 @@ The test set contains:
 | Neutral   |           40 |
 | Positive  |          146 |
 
-### Logistic Regression
+A stratified split was used so that the sentiment distribution was maintained across the training and testing datasets.
+
+---
+
+# 📈 10. Model Evaluation
+
+Because this is a multiclass classification problem with class imbalance, accuracy alone is not sufficient.
+
+The following evaluation metrics were considered:
+
+* Accuracy
+* Precision
+* Recall
+* F1-score
+* Macro F1
+* Confusion Matrix
+
+### Why Macro F1?
+
+Macro F1 calculates the F1-score independently for each class and then averages them.
+
+This gives equal importance to:
+
+```text
+Negative
+Neutral
+Positive
+```
+
+rather than allowing the largest class to dominate the overall metric.
+
+---
+
+# 🏆 11. Model Comparison
+
+Several experiments were performed during development.
+
+| Model / Experiment                          | Accuracy | Macro F1 | Neutral F1 |
+| ------------------------------------------- | -------: | -------: | ---------: |
+| Logistic Regression                         |     0.76 | **0.65** |   **0.29** |
+| Logistic Regression with Trigrams           |     0.77 | **0.65** |   **0.29** |
+| LinearSVC                                   | **0.79** |     0.63 |       0.20 |
+| LinearSVC with Neutral Weight 1.5           | **0.80** |     0.63 |       0.19 |
+| Word + Character TF-IDF                     |     0.75 |     0.63 |       0.25 |
+| TF-IDF + Sentiment Features                 |     0.70 |     0.59 |       0.25 |
+| Contraction Expansion + Logistic Regression |     0.77 |     0.64 |       0.24 |
+
+The results demonstrate that higher accuracy does not necessarily mean better performance across all classes.
+
+For example, the LinearSVC experiment achieved higher accuracy, while Logistic Regression produced stronger macro-level performance and better Neutral F1.
+
+---
+
+# 📌 12. Logistic Regression Results
 
 The main Logistic Regression configuration achieved approximately:
 
 ```text
-Accuracy : 0.76
-Macro F1 : 0.65
+Accuracy: 0.76
+Macro F1: 0.65
 ```
 
 Classification results:
 
-| Class    | Precision | Recall | F1-score |
-| -------- | --------: | -----: | -------: |
-| Negative |      0.78 |   0.81 |     0.80 |
-| Neutral  |      0.31 |   0.28 |     0.29 |
-| Positive |      0.85 |   0.86 |     0.85 |
+| Class                | Precision | Recall | F1-score | Support |
+| -------------------- | --------: | -----: | -------: | ------: |
+| Negative             |      0.78 |   0.81 |     0.80 |     102 |
+| Neutral              |      0.31 |   0.28 |     0.29 |      40 |
+| Positive             |      0.85 |   0.86 |     0.85 |     146 |
+| **Overall Accuracy** |           |        | **0.76** | **288** |
 
-### LinearSVC
-
-A LinearSVC configuration achieved:
+The confusion matrix was:
 
 ```text
-Accuracy : 0.79
-Macro F1 : 0.63
+                 Predicted
+              Negative Neutral Positive
+
+Actual Negative    83      11       8
+       Neutral     15      11      14
+       Positive     8      13     125
 ```
 
-LinearSVC achieved higher overall accuracy in this experiment, while Logistic Regression provided a slightly higher macro F1 and better Neutral-class F1.
+The model performs considerably better on clearly Negative and Positive reviews than on Neutral reviews.
 
 ---
 
-## ⚠️ Neutral Class Analysis
+# ⚠️ 13. Neutral Class Challenge
 
-One of the main findings of the project is that **Neutral sentiment is significantly more difficult to classify** than Positive and Negative sentiment.
+The most important finding from the project is that **Neutral sentiment is substantially harder to classify**.
 
-Many Neutral reviews contain mixed opinions such as:
+Only a small proportion of Neutral reviews were correctly classified compared with the Positive and Negative classes.
+
+The reason is largely related to the nature of three-star reviews.
+
+Many Neutral reviews are not purely neutral statements.
+
+Instead, they contain:
+
+* Positive and negative opinions together
+* Qualified opinions
+* Comparisons
+* Product limitations
+* Statements such as "okay", "average", or "fine"
+* Mixed product experiences
+
+Examples of this type of language include:
 
 ```text
-"good phone but performance is not smooth"
-
-"camera is good but battery could be better"
-
-"average phone for the price"
-
-"good battery but poor camera"
+good phone but performance is not smooth
 ```
 
-Because these reviews contain both positive and negative language, the boundary between the three classes is not always clear.
+```text
+average phone for the price
+```
 
-Several experiments were performed to improve Neutral classification, including:
+```text
+good battery but poor camera
+```
 
-* Increasing Neutral class weight
-* Adding sentiment-count features
-* Adding character-level TF-IDF
-* Using trigrams
-* Expanding contractions
+```text
+camera is okay but performance is slow
+```
 
-These experiments did not produce a substantial improvement in Neutral performance.
+These reviews contain vocabulary associated with multiple sentiment classes.
 
-This demonstrates an important practical machine learning lesson: **model performance is influenced not only by the algorithm but also by the characteristics and ambiguity of the underlying data.**
+Therefore, the Neutral class has a much less distinct linguistic boundary.
 
 ---
 
-## 🔬 Error Analysis
+# 🔬 14. Neutral-Class Error Analysis
 
 Error analysis was performed to understand why Neutral reviews were frequently misclassified.
 
-The analysis showed that many Neutral reviews fall between clearly positive and clearly negative sentiment.
+The analysis showed that Neutral reviews can be broadly characterized as:
 
-For example, a review may contain:
+### Clearly Neutral
+
+Reviews containing words such as:
 
 ```text
-Positive opinion + Negative opinion
+average
+okay
+fine
 ```
 
-rather than expressing a single sentiment.
+### Mostly Positive with Limitations
 
-This makes Neutral classification inherently more challenging for a traditional TF-IDF-based classifier.
+For example:
+
+```text
+Good phone but there are some issues.
+```
+
+### Mostly Negative with Some Positive Features
+
+For example:
+
+```text
+Camera is good but the phone is slow.
+```
+
+### Mixed Sentiment
+
+Reviews containing substantial positive and negative feedback.
+
+This makes the classification problem more difficult than simply identifying individual positive or negative words.
 
 ---
 
-## 🔄 Machine Learning Pipeline
+# 📊 15. Probability Analysis
 
-The final machine learning workflow uses a `Pipeline` to combine text feature extraction and classification.
+Logistic Regression probabilities were also examined for Neutral reviews.
 
-Conceptually:
+For several incorrectly classified Neutral reviews, the predicted probabilities were relatively close between two classes.
+
+For example, one Neutral review had approximately:
 
 ```text
-User Review
-     ↓
-Text Preprocessing
-     ↓
-TF-IDF Vectorization
-     ↓
-Machine Learning Classifier
-     ↓
-Sentiment Prediction
+Negative: 0.435
+Neutral : 0.388
+Positive: 0.177
 ```
 
-Using a pipeline ensures that the same TF-IDF transformation learned during training is applied when new reviews are submitted.
+Another had:
 
-It also allows the complete prediction workflow to be saved as a single Joblib file.
+```text
+Negative: 0.129
+Neutral : 0.384
+Positive: 0.487
+```
+
+These examples demonstrate that some Neutral reviews lie close to the decision boundary between sentiment classes.
+
+Therefore, the errors are not always cases where the model completely ignores Neutral sentiment.
 
 ---
 
-## 💾 Model Serialization
+# 🧪 16. Additional Experiments
 
-The trained model is saved using:
+Several approaches were tested to determine whether Neutral classification could be improved.
+
+## 16.1 Neutral Class Weighting
+
+Increasing the importance of the Neutral class was tested.
+
+However, this did not improve Neutral F1 and in some cases reduced Neutral recall.
+
+Therefore, simply assigning a larger class weight was not sufficient.
+
+---
+
+## 16.2 Word + Character TF-IDF
+
+Character-level TF-IDF features were combined with word-level TF-IDF.
+
+The resulting performance did not improve sufficiently over the baseline.
+
+Therefore, the additional character representation was not retained as the primary approach.
+
+---
+
+## 16.3 Additional Sentiment Features
+
+Three manually designed features were added:
+
+```text
+positive word count
+negative word count
+neutral/mixed word count
+```
+
+The combined model performed worse than the original TF-IDF approach.
+
+This demonstrated that manually counting sentiment words did not capture the contextual relationships present in mixed reviews.
+
+---
+
+## 16.4 Trigram Features
+
+TF-IDF was extended from:
+
+```text
+(1, 2)
+```
+
+to:
+
+```text
+(1, 3)
+```
+
+This allowed the model to consider phrases such as:
+
+```text
+good phone but
+not very good
+```
+
+The result was similar to the original Logistic Regression model and did not provide a substantial improvement.
+
+---
+
+## 16.5 Contraction Expansion
+
+Common contractions were expanded:
+
+```text
+don't → do not
+isn't → is not
+can't → can not
+it's → it is
+```
+
+Although this preserves explicit negation in some reviews, the experiment did not improve overall macro performance or Neutral F1 sufficiently.
+
+Therefore, the original preprocessing strategy was retained.
+
+---
+
+# 🔄 17. Machine Learning Pipeline
+
+A major part of the project is the use of a **Scikit-learn Pipeline**.
+
+Conceptually, the prediction workflow is:
+
+```text
+                  Product Review
+                        │
+                        ▼
+                Text Preprocessing
+                        │
+                        ▼
+                  TF-IDF Vectorizer
+                        │
+                        ▼
+                ML Classification Model
+                        │
+                        ▼
+              Negative / Neutral / Positive
+```
+
+The Pipeline combines feature transformation and classification into one reusable object.
+
+### Why use a Pipeline?
+
+Without a Pipeline, the vectorizer and classifier would have to be handled separately.
+
+With a Pipeline:
+
+```text
+Text → TF-IDF → Classifier → Prediction
+```
+
+becomes a single workflow.
+
+This provides:
+
+* Consistent preprocessing
+* Reproducibility
+* Easier model management
+* Reduced risk of inconsistent transformations
+* Simpler deployment
+
+---
+
+# 💾 18. Model Serialization
+
+The trained model pipeline is saved using Joblib:
 
 ```text
 sentiment_pipeline.joblib
 ```
 
-This allows the Streamlit application to load the already-trained model instead of retraining it every time the application starts.
+This allows the Streamlit application to load the already-trained model instead of retraining the model whenever the application starts.
+
+The saved model contains the trained machine learning workflow required for prediction.
 
 ---
 
-## 🌐 Streamlit Deployment
+# 🌐 19. Streamlit Application
 
-The application is built using **Streamlit**.
+A web application was developed using **Streamlit**.
 
-The application allows users to:
+The application provides a simple interface where users can enter a product review and obtain a sentiment prediction.
 
-1. Enter a product review.
-2. Click **Analyze Sentiment**.
-3. Receive the predicted sentiment.
-4. View the result as Negative, Neutral, or Positive.
+### Application Workflow
 
-The application loads the serialized machine learning model using Joblib.
+```text
+User enters review
+        ↓
+Text preprocessing
+        ↓
+Saved ML pipeline
+        ↓
+TF-IDF transformation
+        ↓
+Classification
+        ↓
+Sentiment displayed
+```
+
+The application displays:
+
+```text
+😊 Positive
+😐 Neutral
+😞 Negative
+```
+
+depending on the prediction.
 
 ---
 
-## 📁 Project Structure
+# 🚀 20. Live Application
+
+The deployed application is available here:
+
+**[Open Product Review Sentiment Analysis App](https://sentiment-analysis-3class-k79mw38u36u6pzpndb4tdz.streamlit.app/)**
+
+---
+
+# 📁 21. Project Structure
 
 ```text
 sentiment-analysis-3class/
 │
 ├── sentiment_analysis.ipynb
+│       └── EDA, preprocessing, feature extraction,
+│           model training, evaluation and experiments
+│
 ├── sentimentapp.py
+│       └── Streamlit application
+│
 ├── sentiment_pipeline.joblib
+│       └── Serialized trained ML pipeline
+│
 ├── requirements.txt
+│       └── Python dependencies
+│
 ├── README.md
+│       └── Project documentation
+│
 └── .gitignore
+        └── Files excluded from version control
 ```
 
-### File Description
+---
 
-| File                        | Description                                                                            |
-| --------------------------- | -------------------------------------------------------------------------------------- |
-| `sentiment_analysis.ipynb`  | Complete data analysis, preprocessing, model training, evaluation, and experimentation |
-| `sentimentapp.py`           | Streamlit web application                                                              |
-| `sentiment_pipeline.joblib` | Serialized trained machine learning pipeline                                           |
-| `requirements.txt`          | Python dependencies required for the project                                           |
-| `README.md`                 | Project documentation                                                                  |
-| `.gitignore`                | Files excluded from Git version control                                                |
+# 🛠️ 22. Technologies Used
+
+| Technology          | Purpose                         |
+| ------------------- | ------------------------------- |
+| Python              | Programming language            |
+| Pandas              | Data manipulation               |
+| NumPy               | Numerical operations            |
+| Matplotlib          | Data visualization              |
+| Scikit-learn        | Machine learning and NLP        |
+| TF-IDF              | Text feature extraction         |
+| Logistic Regression | Sentiment classification        |
+| LinearSVC           | Sentiment classification        |
+| Joblib              | Model serialization             |
+| Streamlit           | Web application and deployment  |
+| Jupyter Notebook    | Development and experimentation |
+| Git                 | Version control                 |
+| GitHub              | Source code hosting             |
 
 ---
 
-## 🛠️ Technologies Used
-
-* **Python**
-* **Pandas**
-* **NumPy**
-* **Matplotlib**
-* **Scikit-learn**
-* **NLTK / LangDetect** for selected text-analysis tasks
-* **Joblib**
-* **Streamlit**
-* **Jupyter Notebook**
-* **Git & GitHub**
-
----
-
-## 📦 Installation
+# 📦 23. Installation
 
 Clone the repository:
 
@@ -388,7 +697,7 @@ Navigate to the project directory:
 cd sentiment-analysis-3class
 ```
 
-Install the required dependencies:
+Install the dependencies:
 
 ```bash
 pip install -r requirements.txt
@@ -396,21 +705,21 @@ pip install -r requirements.txt
 
 ---
 
-## ▶️ Run the Streamlit Application
+# ▶️ 24. Run the Application Locally
 
-Run:
+Start the Streamlit application:
 
 ```bash
 streamlit run sentimentapp.py
 ```
 
-The application will open in your browser.
+The application will open in a web browser.
 
 ---
 
-## 🧪 Example Reviews
+# 🧪 25. Example Predictions
 
-### Positive
+### Positive Review
 
 ```text
 The phone has excellent battery life and a great camera.
@@ -422,7 +731,7 @@ Expected sentiment:
 😊 Positive
 ```
 
-### Negative
+### Negative Review
 
 ```text
 The phone is very slow and the camera quality is poor.
@@ -434,7 +743,7 @@ Expected sentiment:
 😞 Negative
 ```
 
-### Neutral
+### Neutral Review
 
 ```text
 The phone is average for the price and the battery is okay.
@@ -446,65 +755,18 @@ Expected sentiment:
 😐 Neutral
 ```
 
-The examples above illustrate the intended behavior of the application; actual predictions depend on the trained model.
+These examples represent typical sentiment categories. Actual predictions depend on the trained model.
 
 ---
 
-## 📚 Key Learning Outcomes
+# 🔐 26. Data and Repository Considerations
 
-This project provided practical experience with:
+The raw dataset is not included in the GitHub repository.
 
-* Text preprocessing
-* Exploratory Data Analysis
-* TF-IDF feature extraction
-* N-gram features
-* Multiclass classification
-* Logistic Regression
-* LinearSVC
-* Hyperparameter tuning
-* Class weighting
-* Confusion matrix analysis
-* Classification reports
-* Error analysis
-* Scikit-learn Pipelines
-* Model serialization
-* Streamlit application development
-* GitHub project management
-* Machine learning deployment
+The `.gitignore` file excludes the dataset:
 
----
-
-## 🔮 Future Improvements
-
-Potential future improvements include:
-
-* Increasing the size and diversity of the dataset
-* Improving the quality and consistency of Neutral labels
-* Using more advanced NLP representations
-* Experimenting with transformer-based models
-* Handling multilingual and code-mixed reviews more systematically
-* Improving spelling and informal-text normalization
-* Collecting additional real-world product reviews
-* Adding prediction confidence visualization to the application
-
----
-
-## 👤 Author
-
-**Srihari Ravanam**
-
-GitHub:
-https://github.com/RAVANAM-SRIHARI
-
----
-
-## ⭐ Project Summary
-
-This project demonstrates an end-to-end **3-class product review sentiment analysis system**, starting from raw review data and exploratory analysis and progressing through text preprocessing, TF-IDF feature extraction, machine learning model comparison, error analysis, model serialization, and Streamlit deployment.
-
-The project also highlights an important aspect of real-world NLP: **ambiguous and mixed-sentiment reviews can be substantially harder to classify than clearly positive or negative reviews.**
-
+```text
+dataset.csv
 ```
 
-This version is more suitable for a **GitHub portfolio/college project** because it documents not just the final model, but also your **experimentation, evaluation, error analysis, and deployment workflow**.
-```
+This keeps the repository focused on the project code, notebook, trained model, application, and docum
